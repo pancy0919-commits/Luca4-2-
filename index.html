@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>小卡漫劇場 第 2 集：神祕的 lmail 密碼牆</title>
+    <style>
+        body {
+            background-color: #1a1a2e;
+            color: white;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h2 {
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+        /* 第 2 集全新科技感大門舞臺 (850px x 480px) */
+        .stage {
+            width: 850px;
+            height: 480px;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            border: 4px solid #00d2ff;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,210,255,0.3);
+            transition: box-shadow 0.5s ease;
+        }
+        /* 科技感地板 */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background-color: #111;
+            border-top: 4px solid #00d2ff;
+        }
+        /* 中間的 lmail 密碼牆大門 */
+        .password-door {
+            position: absolute;
+            bottom: 80px;
+            left: 345px;
+            width: 160px;
+            height: 220px;
+            background: #1e1e3f;
+            border: 4px solid #ffcc00;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255,204,0,0.4);
+            transition: all 0.5s ease;
+        }
+        .door-screen {
+            width: 120px;
+            height: 70px;
+            background: #000;
+            border: 2px solid #00d2ff;
+            color: #00d2ff;
+            font-family: monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 5px;
+        }
+        /* 角色：皮皮與小怪獸 */
+        .char-pipi {
+            position: absolute;
+            bottom: 70px;
+            left: 120px;
+            font-size: 60px;
+            transition: all 0.5s ease;
+            z-index: 5;
+        }
+        .char-monster {
+            position: absolute;
+            bottom: 70px;
+            left: 40px;
+            font-size: 60px;
+            transition: all 0.5s ease;
+            z-index: 5;
+        }
+        /* 對話框 */
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            color: black;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            max-width: 280px;
+            display: none;
+            z-index: 10;
+        }
+        .bubble-pipi { bottom: 150px; left: 110px; }
+        .bubble-monster { bottom: 150px; left: 30px; }
+
+        /* 第 2 集專屬：解鎖成功特效與片尾 */
+        .ending-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+            z-index: 20;
+        }
+        .ending-title {
+            font-size: 36px;
+            color: #00d2ff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
+        }
+        .ending-sub {
+            font-size: 20px;
+            color: #ffcc00;
+        }
+
+        .control-panel {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #00d2ff;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>小卡漫劇場 第 2 集：神祕的 lmail 密碼牆</h2>
+    
+    <div class="stage">
+        <div class="ground"></div>
+        
+        <!-- 密碼牆大門 -->
+        <div id="door" class="password-door">
+            <div style="color: #ffcc00; font-weight: bold; margin-bottom: 10px; font-size: 14px;">🔒 lmail 登入牆</div>
+            <div id="doorScreen" class="door-screen">INPUT lmail...</div>
+        </div>
+
+        <!-- 角色區 -->
+        <div id="pipi" class="char-pipi">👦</div>
+        <div id="monster" class="char-monster">👾</div>
+        
+        <!-- 對話框 -->
+        <div id="bubblePipi" class="speech-bubble bubble-pipi">就是這裡！我們要用第 1 集拿到的鑰匙開門。</div>
+        <div id="bubbleMonster" class="speech-bubble bubble-monster">可是螢幕上面寫著要輸入專屬 lmail 耶！</div>
+
+        <!-- 第 2 集片尾畫面 -->
+        <div id="endingScreen" class="ending-overlay">
+            <div class="ending-title">🌟 第 2 集 完結 🌟</div>
+            <div class="ending-sub">主線伏筆：lmail 核心權限解鎖成功！</div>
+        </div>
+    </div>
+
+    <div class="control-panel">第 2 集動畫自動播放中...</div>
+
+<script>
+    const bubblePipi = document.getElementById('bubblePipi');
+    const bubbleMonster = document.getElementById('bubbleMonster');
+    const pipi = document.getElementById('pipi');
+    const monster = document.getElementById('monster');
+    const doorScreen = document.getElementById('doorScreen');
+    const door = document.getElementById('door');
+    const endingScreen = document.getElementById('endingScreen');
+    const stage = document.querySelector('.stage');
+
+    // 第 2 集完整劇情時間軸
+    setTimeout(() => {
+        bubblePipi.style.display = 'block';
+    }, 1000);
+
+    setTimeout(() => {
+        bubblePipi.style.display = 'none';
+        bubbleMonster.style.display = 'block';
+    }, 4500);
+
+    setTimeout(() => {
+        bubbleMonster.style.display = 'none';
+        pipi.style.transform = 'translateX(180px)'; // 皮皮走向大門
+    }, 8000);
+
+    setTimeout(() => {
+        bubblePipi.style.display = 'block';
+        bubblePipi.innerText = "輸入最高分級 lmail 與密碼……正在驗證！";
+        doorScreen.innerText = "CHECKING lmail...";
+        doorScreen.style.color = "#ffcc00";
+    }, 11000);
+
+    setTimeout(() => {
+        bubblePipi.style.display = 'none';
+        bubbleMonster.style.display = 'block';
+        bubbleMonster.style.left = "120px";
+        bubbleMonster.innerText = "門打開了！裡面好像有主線任務的線索！";
+        doorScreen.innerText = "ACCESS GRANTED!";
+        doorScreen.style.color = "#00ff66";
+        door.style.borderColor = "#00ff66";
+        door.style.boxShadow = "0 0 30px rgba(0,255,102,0.6)";
+    }, 15000);
+
+    setTimeout(() => {
+        bubbleMonster.style.display = 'none';
+        pipi.style.transform = 'translateX(280px)';
+        monster.style.transform = 'translateX(280px)'; // 兩人都走進門內
+    }, 19000);
+
+    setTimeout(() => {
+        stage.style.boxShadow = '0 0 40px #00d2ff';
+        endingScreen.style.opacity = '1';
+    }, 23000);
+</script>
+
+</body>
+</html>
